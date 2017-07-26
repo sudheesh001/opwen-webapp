@@ -2,6 +2,8 @@ from io import BytesIO
 from shutil import copyfileobj
 from unittest import TestCase
 from unittest.mock import Mock
+from zstd import ZstdCompressor
+from zstd import ZstdDecompressor
 
 from azure.common import AzureMissingResourceHttpError
 
@@ -23,8 +25,13 @@ class AzureSyncTests(TestCase):
             serializer=JsonSerializer())
 
     def assertUploadIs(self, actual: BytesIO, expected: bytes):
-        with self.sync._open(actual) as uploaded:
-            self.assertEqual(expected, uploaded.read())
+        dctx = ZstdDecompressor()
+
+        decompressed_bytes = bytearray()
+        for chunk in dctx.read_from(actual):
+            decompressed_bytes.extend(chunk)
+
+        self.assertEqual(expected, decompressed_bytes)
 
     def given_upload(self) -> BytesIO:
         buffer = BytesIO()
@@ -39,7 +46,8 @@ class AzureSyncTests(TestCase):
 
     def given_download(self, payload: bytes):
         buffer = BytesIO()
-        with self.sync._open(buffer, 'wb') as fobj:
+        cctx = ZstdCompressor(write_content_size=True)
+        with cctx.write_to(buffer) as fobj:
             fobj.write(payload)
         buffer.seek(0)
 

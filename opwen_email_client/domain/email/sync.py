@@ -3,10 +3,15 @@ from abc import abstractmethod
 from gzip import GzipFile
 from io import BytesIO
 from io import TextIOBase
+from io import TextIOWrapper
+from io import BufferedReader
+from io import BufferedWriter
 from tempfile import NamedTemporaryFile
 from typing import Iterable
 from typing import TypeVar
 from uuid import uuid4
+from zstd import ZstdCompressor
+from zstd import ZstdDecompressor
 
 from azure.common import AzureMissingResourceHttpError
 from azure.storage.blob import BlockBlobService
@@ -69,6 +74,9 @@ class AzureSync(Sync):
         self._azure_client.create_blob_from_stream(self._container,
                                                    blobname, stream)
 
+    # Note: zstandard==0.8.1 is in beta and currently does not support streaming input.
+    # According to their plan, they are planning on including this feature in version 0.9.x
+    # Once it supports streaming input, we should make changes in compress/decompress.
     def download(self):
         resource_id, container = self._email_server_client.download()
         if not resource_id or not container:
@@ -77,22 +85,24 @@ class AzureSync(Sync):
         with self._workspace() as workspace:
             if self._download_to_stream(resource_id, container, workspace):
                 workspace.seek(0)
-                with self._open(workspace) as downloaded:
-                    for line in downloaded:
-                        yield self._serializer.deserialize(line)
+                dctx = ZstdDecompressor()
+                stream = BytesIO(b''.join(dctx.read_from(workspace)))
+                for line in stream.readlines():
+                    yield self._serializer.deserialize(line)
 
     def upload(self, items):
         uploaded_ids = []
         upload_location = str(uuid4())
 
         with self._workspace() as workspace:
-            with self._open(workspace, 'wb') as uploaded:
+            cctx = ZstdCompressor(write_content_size=True)
+            with cctx.write_to(workspace) as compressor:
                 for item in items:
                     item = {key: value for (key, value) in item.items()
                             if value is not None}
                     serialized = self._serializer.serialize(item)
-                    uploaded.write(serialized)
-                    uploaded.write(b'\n')
+                    compressor.write(serialized)
+                    compressor.write(b'\n')
                     uploaded_ids.append(item.get('_uid'))
 
             if uploaded_ids:
