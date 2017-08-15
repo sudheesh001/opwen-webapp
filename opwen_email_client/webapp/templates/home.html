@@ -4,14 +4,50 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.min.css') }}">
 {% endblock %}
 
-{% block content %}{{ super() }}
+{% macro _what_is_opwen() %}
+<div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h2 id="what">{{ _('What is Lokole?') }}</h2>
+      {{ _(
+        'Lokole is a project of the Canadian-Congolese non-profit organization '
+        'Ascoderu that enables rural communities to cheaply and sustainably access '
+        "the global communications network via email. As such, Lokole is Ascoderu's "
+        'contribution to the United Nations Sustainable Development Goal 9: '
+        'achieving global sustainable communications infrastructure.'
+        ) }}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro _how_does_it_work() %}
+<div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h2 id="how">{{ _('How does it work?') }}</h2>
+      {{ _(
+        'The Lokole is a small device that creates a local network: the Lokole '
+        'WiFi. You can connect to this network with any device: your phone, '
+        'your tablet or your laptop. Once on the network, you access the '
+        'Lokole website where you read and write emails via your Ascoderu '
+        'account. Once per day, when the cost of bandwidth is cheapest the '
+        "Lokole then transmits everyone's emails to the cloud. "
+        'In this way, many people can pool their resources to make email '
+        'available for everyone.'
+        ) }}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+
+{% block homecontent %}{{ super() }}
 <div class="row">
-  <div class="col-sm-offset-3 col-sm-6">
+  <div class="col-sm-12">
     <div class="jumbotron">
       <div class="container text-center">
-        <h2>{{ _('Lokole') }}<br/>
-          <small>{{ _('Email for all') }}</small>
-        </h2>
+        <h2>{{ _('Lokole') }} <p class="lead">{{ _('Email for all') }}</p></h2>
 
         <img src="{{ url_for('static', filename='images/logo.png') }}" class="img-responsive center-block" id="lokole-logo" alt="{{ _('Lokole logo.') }}">
 
@@ -21,11 +57,11 @@
 
         <div>
           {% if not current_user.is_authenticated %}
-          <a class="btn btn-primary btn-lg" href="{{ url_for_security('register') }}">{{ _('Sign up') }}</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for_security('register') }}"><i class="fa fa-lock"></i> {{ _('Sign up') }}</a>
           {% else %}
-          <a class="btn btn-primary btn-lg" href="{{ url_for('email_inbox') }}">{{ _('Check your emails') }}</a>
+          <a class="btn btn-primary btn-lg" href="{{ url_for('email_inbox') }}"><i class="fa fa-envelope"></i> {{ _('Check your emails') }}</a>
           {% endif %}
-          <a class="btn btn-default btn-lg" href="{{ url_for('about') }}">{{ _('Learn more') }}</a>
+          <a class="btn btn-default btn-lg" href="{{ url_for('about') }}"><i class="fa fa-group"></i> {{ _('Meet the Team') }}</a>
           {% if not current_user.is_authenticated %}
           <div>
             <small>
@@ -36,6 +72,14 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-5 col-sm-offset-1">
+    {{ _what_is_opwen() }}
+  </div>
+  <div class="col-sm-5">
+    {{ _how_does_it_work() }}
   </div>
 </div>
 {% endblock %}

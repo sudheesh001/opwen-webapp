@@ -30,6 +30,31 @@
 </li>
 {% endmacro %}
 
+{% macro quick_inbox() %}
+<li class="dropdown notifications hidden-xs hidden-sm">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <i class="fa fa-envelope"></i>
+    <span class="badge floating badge-danger">1</span>
+  </a>
+  <ul class="dropdown-menu" style="width:300px">
+    <li class="media">
+      <div class="media-left" style="padding-top:20px;padding-left:20px;">
+        <a href="#">
+          <img src="https://randomuser.me/api/portraits/thumb/men/83.jpg" class="media-object thumb" alt="people" style="border-radius:50%;">
+        </a>
+      </div>
+      <div class="media-body">
+        <div class="pull-right" style="padding-top:5px;">
+          <span class="label label-default">5 mins</span>
+        </div>
+        <h5>Name of the user</h5>
+        <p class="margin-none">Lorem ipsum dolor sit amet, consectetur adipisicing elit!</p>
+      </div>
+    </li>
+  </ul>
+</li>
+{% endmacro %}
+
 {% macro main_nav() %}
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -47,8 +72,8 @@
         {{ nav_link('email_inbox', _('Email'), level=0) }}
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        {{ language_switcher() }}
         {% if current_user.is_authenticated %}
+        {{ quick_inbox() }}
         {{ nav_link_security('logout', _('Logout') + ' (' + current_user.email + ')') }}
         {% else %}
         {{ nav_link_security('login', _('Login')) }}
@@ -57,6 +82,7 @@
         {% if current_user.is_admin %}
         {{ nav_link('admin', _('Admin panel'), level=0) }}
         {% endif %}
+        {{ language_switcher() }}
       </ul>
     </div>
   </div>
