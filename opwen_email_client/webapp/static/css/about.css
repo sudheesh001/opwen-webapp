@@ -3,3 +3,16 @@
     text-align: center;
   }
 }
+
+body {
+  padding-top: 50px;
+}
+
+img.maintainer {
+  border-radius: 50%;
+}
+
+div.maintainer {
+  padding-top: 1%;
+  text-align: center;
+}

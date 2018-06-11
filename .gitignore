@@ -9,6 +9,7 @@ opwen_email_client/webapp/static/flags
 
 .mypy_cache/
 venv/
+env/
 *.pyc
 __pycache__/
 /build/

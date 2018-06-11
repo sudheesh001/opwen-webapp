@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% from 'macros/messages.html' import render_flashed_messages with context %}
 {% from 'macros/nav.html' import main_nav with context %}
+{% from 'macros/content.html' import what_is_opwen, how_does_it_work with context %}
+{% from 'macros/maintainers.html' import nzola, laura, clemens with context %}
 
 <html>
 <head>
@@ -23,12 +25,13 @@
   {% block style %}{% endblock %}
 </head>
 <body>
-  <div class="container">
     {{ main_nav() }}
 
     {{ render_flashed_messages() }}
 
+    <div class="st-container">
     {% block content %}{% endblock %}
+
   </div>
 
   {% block scripts %}{% endblock %}

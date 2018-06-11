@@ -1,0 +1,23 @@
+{% macro nzola() %}
+    <img class="maintainer" src="https://randomuser.me/api/portraits/men/15.jpg" alt="">
+    <h2 class="lead">Nzola</h2>
+{% endmacro %}
+
+{% macro laura() %}
+    <img class="maintainer" src="https://randomuser.me/api/portraits/men/15.jpg" alt="">
+    <h2 class="lead">Laura</h2>
+{% endmacro %}
+
+{% macro clemens() %}
+    <img class="maintainer" src="{{ url_for('static', filename='images/clemens.jpg') }}" alt="A picture of Clemens">
+    <h2 class="lead">Clemens</h2></span>
+    {{ _(
+    'Clemens is a full-stack software developer who spent '
+    'much of his life in Togo, Mali and Zambia and is now based '
+    'in Vancouver, Canada. He honed his software chops '
+    'working on large-scale projects at Amazon and Microsoft '
+    'and on open-souce projects such as the sharing platform '
+    'yunity. Clemens now drives the development of all '
+    'technical aspects of Ascoderu\'s projects'
+    ) }}
+{% endmacro %}

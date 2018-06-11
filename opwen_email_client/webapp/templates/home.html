@@ -6,7 +6,6 @@
 
 {% block content %}{{ super() }}
 <div class="row">
-  <div class="col-sm-offset-3 col-sm-6">
     <div class="jumbotron">
       <div class="container text-center">
         <h2>{{ _('Lokole') }}<br/>
@@ -35,7 +34,15 @@
           {% endif %}
         </div>
       </div>
-    </div>
   </div>
+    <div class="container">
+        <div class="col-sm-5">
+          {{ what_is_opwen() }}
+        </div>
+
+        <div class="col-sm-7">
+          {{ how_does_it_work() }}
+        </div>
+    </div>
 </div>
 {% endblock %}
